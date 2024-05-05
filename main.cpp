@@ -2,7 +2,6 @@
 #include <iostream>
 const int gridSize = 20;
 
-// Define the maze layout using a 2D array
 int maze[gridSize][gridSize] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
