@@ -59,6 +59,10 @@ void drawGrid(sf::RenderWindow &window,int cellSize){
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Pacman");
+
+    const float cellSizeX = window.getSize().x / gridSize;
+    const float cellSizeY = window.getSize().y / gridSize;
+
     sf::Texture pacmanTexture;
     if (!pacmanTexture.loadFromFile("pacman.png")) {
         return 1;
@@ -67,6 +71,7 @@ int main() {
     sf::Sprite pacman(pacmanTexture);
     pacman.setOrigin(pacmanTexture.getSize().x / 2, pacmanTexture.getSize().y / 2);
     pacman.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+    pacman.setScale(cellSizeX / pacman.getLocalBounds().width, cellSizeY / pacman.getLocalBounds().height);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -99,38 +104,28 @@ int main() {
             movingbottom = true;
         }
 
-        const float cellSizeX = window.getSize().x / gridSize;
-        const float cellSizeY = window.getSize().y / gridSize;
-
         sf::Vector2f newPos = pacman.getPosition() + movement;
         int newX = newPos.x / (cellSizeX);
         int newY = newPos.y / (cellSizeY);
-
-        if (newX >= 0 && newX < window.getSize().x / gridSize &&
-            newY >= 0 && newY < window.getSize().y / gridSize &&
-            newPos.x >= 0 && newPos.x < window.getSize().x &&
-            newPos.y >= 0 && newPos.y < window.getSize().y) {
-            if(maze[newY][newX] == 0){
-                sf::Vector2f pos(newPos.x,newPos.y);
-                if(movingright){
-                    pos = sf::Vector2f(newPos.x,newY*40+20);
-                }else if(movingleft){
-                    pos = sf::Vector2f(newPos.x,newY*40+20);
-                }else if(movingtop){
-                    pos = sf::Vector2f(newX*40+20,newPos.y);
-                }else{
-                    pos = sf::Vector2f(newX*40+20,newPos.y);
-                }
-                pacman.setPosition(pos);
+        if(maze[newY][newX] == 0){
+            sf::Vector2f pos(newPos.x,newPos.y);
+            if(movingright){
+                pos = sf::Vector2f(newPos.x,newY*40+20);
+            }else if(movingleft){
+                pos = sf::Vector2f(newPos.x,newY*40+20);
+            }else if(movingtop){
+                pos = sf::Vector2f(newX*40+20,newPos.y);
+            }else if (movingbottom) {
+                pos = sf::Vector2f(newX*40+20,newPos.y);
+            }else{
+                pos = sf::Vector2f(newX*40+20,newY*40+20);
             }
-            std::cout << "Pacman's current grid position: (" << newX << ", " << newY << ")" << std::endl;
+            pacman.setPosition(pos);
         }
+        std::cout << "Pacman's current grid position: (" << newX << ", " << newY << ")" << std::endl;
         window.clear();
-       
-        
-        pacman.setScale(cellSizeX / pacman.getLocalBounds().width, cellSizeY / pacman.getLocalBounds().height);
-        drawMaze(window, maze, 40);
         window.draw(pacman);
+        drawMaze(window, maze, 40);
         //drawGrid(window,cellSizeX); Used to debug
         window.display();
     }
