@@ -39,6 +39,20 @@ void drawMaze(sf::RenderWindow &window, const int maze[gridSize][gridSize], int 
     }
 }
 
+void drawPellets(sf::RenderWindow &window, const int maze[gridSize][gridSize], int cellSize) {
+    sf::CircleShape dot(cellSize / 6);
+    dot.setFillColor(sf::Color::White);
+    float offset = (cellSize - dot.getRadius() * 2) / 2;
+    for (int y = 0; y < gridSize; ++y) {
+        for (int x = 0; x < gridSize; ++x) {
+            if (maze[y][x] == 0) {
+                dot.setPosition(x * cellSize + offset, y * cellSize + offset);
+                window.draw(dot);
+            }
+        }
+    }
+}
+
 void drawGrid(sf::RenderWindow &window,int cellSize){
     for (int i = 0; i <= gridSize; ++i){
         sf::Vertex line[] = {
@@ -85,6 +99,7 @@ int main() {
         bool movingright = false;
         bool movingbottom = false;
         sf::Vector2f movement(0.0f, 0.0f);
+        
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             movement.x = -0.1f;
             pacman.setRotation(180.0f);
@@ -107,23 +122,21 @@ int main() {
         sf::Vector2f newPos = pacman.getPosition() + movement;
         int newX = newPos.x / (cellSizeX);
         int newY = newPos.y / (cellSizeY);
-        if(maze[newY][newX] == 0){
+        if(maze[newY][newX] != 1){
             sf::Vector2f pos(newPos.x,newPos.y);
-            if(movingright){
+            if(movingright || movingleft){
                 pos = sf::Vector2f(newPos.x,newY*40+20);
-            }else if(movingleft){
-                pos = sf::Vector2f(newPos.x,newY*40+20);
-            }else if(movingtop){
-                pos = sf::Vector2f(newX*40+20,newPos.y);
-            }else if (movingbottom) {
+            }else if(movingtop || movingbottom){
                 pos = sf::Vector2f(newX*40+20,newPos.y);
             }else{
                 pos = sf::Vector2f(newX*40+20,newY*40+20);
             }
+            maze[newY][newX] = 8;
             pacman.setPosition(pos);
         }
         std::cout << "Pacman's current grid position: (" << newX << ", " << newY << ")" << std::endl;
         window.clear();
+        drawPellets(window,maze,40);
         window.draw(pacman);
         drawMaze(window, maze, 40);
         //drawGrid(window,cellSizeX); Used to debug
