@@ -39,6 +39,24 @@ void drawMaze(sf::RenderWindow &window, const int maze[gridSize][gridSize], int 
     }
 }
 
+void drawGrid(sf::RenderWindow &window,int cellSize){
+    for (int i = 0; i <= gridSize; ++i){
+        sf::Vertex line[] = {
+            sf::Vertex(sf::Vector2f(0, i * cellSize)),
+            sf::Vertex(sf::Vector2f(window.getSize().x, i * cellSize))
+        };
+        window.draw(line, 2, sf::Lines);
+    }
+
+    for (int i = 0; i <= gridSize; ++i){
+        sf::Vertex line[] = {
+            sf::Vertex(sf::Vector2f(i * cellSize, 0)),
+            sf::Vertex(sf::Vector2f(i * cellSize, window.getSize().y))
+        };
+        window.draw(line, 2, sf::Lines);
+    }
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Pacman");
     sf::Texture pacmanTexture;
@@ -57,23 +75,28 @@ int main() {
                 window.close();
             }
         }
-
+        bool movingleft = false;
+        bool movingtop = false;
+        bool movingright = false;
+        bool movingbottom = false;
         sf::Vector2f movement(0.0f, 0.0f);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             movement.x = -0.1f;
             pacman.setRotation(180.0f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            movingleft = true;
+        }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             movement.x = 0.1f;
             pacman.setRotation(0.0f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            movingright = true;
+        }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             movement.y = -0.1f;
             pacman.setRotation(-90.0f);
+            movingtop = true;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             movement.y = 0.1f;
             pacman.setRotation(90.0f);
+            movingbottom = true;
         }
 
         const float cellSizeX = window.getSize().x / gridSize;
@@ -88,17 +111,27 @@ int main() {
             newPos.x >= 0 && newPos.x < window.getSize().x &&
             newPos.y >= 0 && newPos.y < window.getSize().y) {
             if(maze[newY][newX] == 0){
-                sf::Vector2f test(newPos.x,newPos.y);
-                pacman.setPosition(test);
+                sf::Vector2f pos(newPos.x,newPos.y);
+                if(movingright){
+                    pos = sf::Vector2f(newPos.x,newY*40+20);
+                }else if(movingleft){
+                    pos = sf::Vector2f(newPos.x,newY*40+20);
+                }else if(movingtop){
+                    pos = sf::Vector2f(newX*40+20,newPos.y);
+                }else{
+                    pos = sf::Vector2f(newX*40+20,newPos.y);
+                }
+                pacman.setPosition(pos);
             }
             std::cout << "Pacman's current grid position: (" << newX << ", " << newY << ")" << std::endl;
         }
         window.clear();
        
-       
+        
         pacman.setScale(cellSizeX / pacman.getLocalBounds().width, cellSizeY / pacman.getLocalBounds().height);
         drawMaze(window, maze, 40);
         window.draw(pacman);
+        //drawGrid(window,cellSizeX); Used to debug
         window.display();
     }
     return 0;
