@@ -47,7 +47,6 @@ class Pacman : public Entities {
                 }else{
                     pos = sf::Vector2f(newX*cellSize+(cellSize/2),newY*cellSize+(cellSize/2));
                 }
-                //onCollect(newX,newY);
                 pacman.setPosition(pos);
             }else{
                 return false;
