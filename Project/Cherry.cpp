@@ -47,7 +47,7 @@ class Cherry : public Collectables {
             while (count < n) {
                 int x = rand() % gridSize;
                 int y = rand() % gridSize;
-                if (maze[x][y] == 0) {
+                if (maze[x][y] == 0 || maze[x][y] == 8) {
                     maze[x][y] = 3;
                     count++;
                 }
