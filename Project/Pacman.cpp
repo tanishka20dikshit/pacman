@@ -4,7 +4,9 @@ class Pacman : public Entities {
         sf::Sprite pacman;
         int cellSize;
         int gridSize;
-        float speed = 0.05f;
+        float speed = 0.15f;
+        sf::Clock clock;
+        bool boost = false;
     public:
         Pacman(){}
         Pacman(sf::RenderWindow& window,int gs){
@@ -58,5 +60,20 @@ class Pacman : public Entities {
         }
         virtual sf::Vector2f getPosition() const override {
             return pacman.getPosition();
+        }
+        void increaseSpeed(bool toggle) {
+            if (toggle) {
+                clock.restart();
+                boost = true;
+            } else if (boost) {
+                sf::Time elapsed = clock.getElapsedTime();
+                float seconds = elapsed.asSeconds();
+                if (seconds < 5) {
+                    speed = 0.3f;
+                } else {
+                    speed = 0.15f;
+                    boost = false;
+                }
+            }
         }
 };
