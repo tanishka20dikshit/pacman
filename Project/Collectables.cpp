@@ -3,5 +3,5 @@ class Collectables : public Elements{
         int points;
     public:
         Collectables() {}
-        //virtual void addPoints(int points){};
+        virtual void addPoints(int points){};
 };
