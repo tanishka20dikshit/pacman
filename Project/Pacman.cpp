@@ -4,7 +4,7 @@ class Pacman : public Entities {
         sf::Sprite pacman;
         int cellSize;
         int gridSize;
-        float speed = 0.15f;
+        float speed = 200.0f;
         sf::Clock clock;
         bool boost = false;
     public:
@@ -21,20 +21,21 @@ class Pacman : public Entities {
         virtual void draw(sf::RenderWindow& window) override {
             window.draw(pacman);
         }
-        virtual bool move(int direction,Maze maze) override {
+        virtual bool move(int direction,Maze maze,float time) override {
             sf::Vector2f movement(0.0f, 0.0f);
+            float fSpeed = time * speed;
             if (direction == 0) {
-                movement.x = -speed;
+                movement.x = -fSpeed;
                 pacman.setRotation(180.0f);
             }else if (direction == 1) {
-                movement.x = speed;
+                movement.x = fSpeed;
                 pacman.setRotation(0.0f);
             }else if (direction == 2) {
-                movement.y = -speed;
+                movement.y = -fSpeed;
                 pacman.setRotation(-90.0f);
             }
             else if (direction == 3) {
-                movement.y = speed;
+                movement.y = fSpeed;
                 pacman.setRotation(90.0f);
             }
             sf::Vector2f newPos = pacman.getPosition() + movement;
@@ -69,9 +70,9 @@ class Pacman : public Entities {
                 sf::Time elapsed = clock.getElapsedTime();
                 float seconds = elapsed.asSeconds();
                 if (seconds < 5) {
-                    speed = 0.3f;
+                    speed = 400.0f;
                 } else {
-                    speed = 0.15f;
+                    speed = 200.0f;
                     boost = false;
                 }
             }

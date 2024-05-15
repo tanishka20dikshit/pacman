@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <chrono>
 #include "Elements.cpp"
 #include "Maze.cpp"
 #include "Entities.cpp"
@@ -65,6 +66,7 @@ class Game {
             playText.setPosition(window.getSize().x / 2.0f, 500);
         }
         void run() {
+            auto sTime = std::chrono::high_resolution_clock::now();
             while (window.isOpen()) {
                 sf::Event event;
                 while (window.pollEvent(event)) {
@@ -80,12 +82,16 @@ class Game {
                     }
                 }
                 handlingKeys();
+                auto cTime = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<float> elapsed = cTime - sTime;
+                sTime = cTime;
+                float time = elapsed.count();
                 if(isAlive){
-                    if (!player.move(direction, maze)) {
+                    if (!player.move(direction, maze, time)) {
                         direction = 4;
                     }
                     for (int i = 0; i < 4; ++i) {
-                        ghosts[i]->move(0, maze);
+                        ghosts[i]->move(0, maze, time);
                         if (ghosts[i]->checkDeath(player)){
                             isAlive = false; 
                         };

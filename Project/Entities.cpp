@@ -3,5 +3,5 @@ class Entities : public Elements{
         int speed;
     public:
         Entities() {}
-        virtual bool move(int direction,Maze maze){return false;}
+        virtual bool move(int direction,Maze maze,float time){return false;}
 };

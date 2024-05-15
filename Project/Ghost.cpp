@@ -5,7 +5,7 @@ class Ghost : public Entities {
         sf::Sprite ghost;
         int cellSize;
         int gridSize;
-        float speed = 0.17f;
+        float speed = 250.0f;
     public:
         Ghost(){}
         Ghost(sf::RenderWindow& window,int gs,int x, int y, std::string color) {
@@ -21,20 +21,21 @@ class Ghost : public Entities {
         virtual void draw(sf::RenderWindow& window) override {
             window.draw(ghost);
         }
-        virtual bool move(int direction,Maze maze) override {
+        virtual bool move(int direction,Maze maze,float time) override {
             sf::Vector2f ghostMov(0.0f, 0.0f);
+            float fSpeed = time * speed;
             switch (change) {
                 case 0:
-                    ghostMov.x = speed;
+                    ghostMov.x = fSpeed;
                     break;
                 case 1:
-                    ghostMov.y = speed;
+                    ghostMov.y = fSpeed;
                     break;
                 case 2:
-                    ghostMov.x = -speed;
+                    ghostMov.x = -fSpeed;
                     break;
                 case 3:
-                    ghostMov.y = -speed;
+                    ghostMov.y = -fSpeed;
                     break;
             }
             sf::Vector2f ghostPos = ghost.getPosition() + ghostMov;
