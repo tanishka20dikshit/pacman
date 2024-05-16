@@ -2,9 +2,9 @@ class Cherry : public Collectables {
     private:
         int gridSize;
         int cellSize;
-        int **maze;
         int points = 100;
         int n = 1; // Number of cherries to be placed
+        int **maze;
         sf::Texture cherryTexture;
     public:
         Cherry(){}

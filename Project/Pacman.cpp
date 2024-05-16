@@ -1,24 +1,32 @@
 class Pacman : public Entities {
     private:
         sf::Texture pacmanTexture;
+        sf::Texture pacmanfTexture;
         sf::Sprite pacman;
+        sf::Clock clock;
+        sf::Clock clk;
         int cellSize;
         int gridSize;
         float speed = 200.0f;
-        sf::Clock clock;
         bool boost = false;
+        bool changed = false;
     public:
         Pacman(){}
-        Pacman(sf::RenderWindow& window,int gs){
-            gridSize = gs;
+        Pacman(sf::RenderWindow& window,int gs) : gridSize(gs) {
             cellSize = window.getSize().x / gridSize;
             pacmanTexture.loadFromFile("pacman.png");
+            pacmanfTexture.loadFromFile("pacman-full.png");
             pacman.setTexture(pacmanTexture);
             pacman.setOrigin(pacmanTexture.getSize().x / 2, pacmanTexture.getSize().y / 2);
             pacman.setPosition(window.getSize().x / 2, window.getSize().y / 2);
             pacman.setScale(cellSize / pacman.getLocalBounds().width, cellSize / pacman.getLocalBounds().height);
         }
         virtual void draw(sf::RenderWindow& window) override {
+            if(clk.getElapsedTime().asSeconds() > 0.2f) {
+                changed = !changed;
+                pacman.setTexture(changed ? pacmanfTexture : pacmanTexture);
+                clk.restart();
+            } 
             window.draw(pacman);
         }
         virtual bool move(int direction,Maze maze,float time) override {

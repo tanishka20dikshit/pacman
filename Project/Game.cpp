@@ -10,6 +10,7 @@
 #include "Pellets.cpp"
 #include "SpeedDot.cpp"
 #include "Cherry.cpp"
+
 class Game {
     private:
         int points = 0;
@@ -17,18 +18,18 @@ class Game {
         bool isAlive = false;
         int width;
         int height;
+        int direction; // 0 left,1 right,2 up,3 down,4 none
         sf::RenderWindow window;
+        sf::Font font;
+        sf::Text score;
+        sf::Text title;
+        sf::Text playText;
         Maze maze;
         Pacman player;
         Ghost* ghosts[4];
         Pellets pellets;
         SpeedDot speedDot;
         Cherry cherry;
-        int direction; // 0 left,1 right,2 up,3 down,4 none
-        sf::Font font;
-        sf::Text score;
-        sf::Text title;
-        sf::Text playText;
     public:
         Game(int h, int w) :
             height(h),
@@ -40,11 +41,11 @@ class Game {
             speedDot(20,width,maze.maze),
             cherry(20,width,maze.maze)
         {
-            player.setPosition(sf::Vector2f(60, 60));
-            ghosts[0] = new Ghost(window, 20, 180, 60,"red");
-            ghosts[1] = new Ghost(window, 20, 720, 720,"blue");
-            ghosts[2] = new Ghost(window, 20, 140, 140,"green");
-            ghosts[3] = new Ghost(window, 20, 480, 400,"yellow");
+            player.setPosition(sf::Vector2f(740, 740));
+            ghosts[0] = new Ghost(window, 20, 1, 1,"red");
+            ghosts[1] = new Ghost(window, 20, 6, 18,"blue");
+            ghosts[2] = new Ghost(window, 20, 8, 7,"green");
+            ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
             font.loadFromFile("CrackMan.TTF");
             score.setFont(font);
             score.setCharacterSize(20);
@@ -138,5 +139,10 @@ class Game {
                 window.draw(score);
             }
             window.display();
+        }
+        ~Game() {
+            for (int i = 0; i < 4; ++i) {
+                delete ghosts[i];
+            }
         }
 };

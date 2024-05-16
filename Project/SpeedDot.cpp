@@ -2,9 +2,9 @@ class SpeedDot : public Collectables {
     private:
         int gridSize;
         int cellSize;
-        int **maze;
         int points = 50;
         int n = 3; // Number of speed dots to be placed
+        int **maze;
     public:
         SpeedDot(){}
         SpeedDot(int gs,int width,int ** mz){

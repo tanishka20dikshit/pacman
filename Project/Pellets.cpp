@@ -2,8 +2,8 @@ class Pellets : public Collectables {
     private:
         int gridSize;
         int cellSize;
-        int **maze;
         int points = 10;
+        int **maze;
     public:
         Pellets(){}
         Pellets(int gs,int width,int ** mz){
