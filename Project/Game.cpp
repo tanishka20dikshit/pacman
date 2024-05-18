@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <chrono>
+#include <fstream>
 #include "Elements.cpp"
 #include "Maze.cpp"
 #include "Entities.cpp"
@@ -13,17 +15,24 @@
 
 class Game {
     private:
-        int points = 0;
-        int lives = 1;
-        bool isAlive = false;
-        int width;
-        int height;
-        int direction = 4; // 0 left,1 right,2 up,3 down,4 none
         sf::RenderWindow window;
         sf::Font font;
         sf::Text score;
+        sf::Text livesText;
         sf::Text title;
         sf::Text playText;
+        sf::SoundBuffer buffer;
+        sf::Sound siren;
+        sf::SoundBuffer buffer_ready;
+        sf::Sound sound_ready;
+        sf::Clock clock;
+        int points = 0;
+        int lives = 3;
+        bool isAlive = false;
+        bool canGameStart = false;
+        int width;
+        int height;
+        int direction = 0; // 0 left,1 right,2 up,3 down,4 none
         Maze maze;
         Pacman player;
         Ghost* ghosts[4];
@@ -46,12 +55,19 @@ class Game {
             ghosts[1] = new Ghost(window, 20, 6, 18,"blue");
             ghosts[2] = new Ghost(window, 20, 8, 7,"green");
             ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
+
+            /// Details
             font.loadFromFile("CrackMan.TTF");
             score.setFont(font);
             score.setCharacterSize(20);
             score.setFillColor(sf::Color::Yellow);
             score.setStyle(sf::Text::Bold);
             score.setPosition(30,330);
+            livesText.setFont(font);
+            livesText.setCharacterSize(20);
+            livesText.setFillColor(sf::Color::Yellow);
+            livesText.setStyle(sf::Text::Bold);
+            livesText.setPosition(650,330);
 
             /// Start Screen
             title = sf::Text ("PACMAN", font, 100);
@@ -65,6 +81,13 @@ class Game {
             sf::FloatRect textBounds = playText.getLocalBounds();
             playText.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
             playText.setPosition(window.getSize().x / 2.0f, 500);
+
+            /// Sound
+            buffer.loadFromFile("sounds/sound_siren.wav");
+            siren.setBuffer(buffer);
+            buffer_ready.loadFromFile("sounds/sound_ready.mp3");
+            sound_ready.setBuffer(buffer_ready);
+            siren.setLoop(true);
         }
         void run() {
             auto sTime = std::chrono::high_resolution_clock::now();
@@ -75,14 +98,8 @@ class Game {
                         window.close();
                     }
                 }
-                if (event.type == sf::Event::MouseButtonPressed && !isAlive) {
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        if (playText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                            isAlive = true; 
-                        }
-                    }
-                }
-                handlingKeys();
+                handleClicks();
+                handleKeys();
                 auto cTime = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float> elapsed = cTime - sTime;
                 sTime = cTime;
@@ -94,19 +111,25 @@ class Game {
                     for (int i = 0; i < 4; ++i) {
                         ghosts[i]->move(0, maze, time);
                         if (ghosts[i]->checkDeath(player)){
-                            resetGame(); 
+                            lives--;
+                            if(lives == 0){
+                                resetGame(); 
+                            }else{
+                                player.setPosition(sf::Vector2f(740, 740));
+                            }
                         };
                     }
+                    points += pellets.addPoints(player);
+                    points += speedDot.addPoints(player);
+                    points += cherry.addPoints(player);
+                    score.setString("P* " + std::to_string(points));
+                    livesText.setString("Lives " + std::to_string(lives));
                 }
-                points += pellets.addPoints(player);
-                points += speedDot.addPoints(player);
-                points += cherry.addPoints(player);
-                score.setString("P* " + std::to_string(points));
                 render();
             }
         }
 
-        void handlingKeys() {
+        void handleKeys() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 direction = 0;
             }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -118,13 +141,31 @@ class Game {
             }
         }
 
+        void handleClicks() {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isAlive && canGameStart) {
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                if (playText.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    isAlive = true; 
+                    siren.play();
+                }
+            }
+        }
+
         void render() {
+            window.clear(isAlive ? sf::Color::Black : sf::Color(50, 50, 50));
             if(!isAlive){
-                window.clear(sf::Color::Black); 
                 window.draw(title);
-                window.draw(playText);
+                if(!canGameStart){
+                    if(sound_ready.getStatus() != sf::Sound::Playing){
+                        sound_ready.play();
+                    }
+                    if(clock.getElapsedTime().asSeconds() > 4){
+                        canGameStart = true;
+                    }
+                }else{
+                    window.draw(playText);
+                }
             }else{
-                window.clear();
                 maze.draw(window);
                 for (int i = 0; i < 4; ++i) {
                     ghosts[i]->draw(window);
@@ -134,16 +175,21 @@ class Game {
                 cherry.draw(window);
                 player.draw(window);
                 window.draw(score);
+                window.draw(livesText);
             }
             window.display();
         }
 
         void resetGame(){
             isAlive = false;
+            canGameStart = false;
+            clock.restart();
+            lives = 3;
+            direction = 0;
+            points = 0;
             maze.reset();
             speedDot.placeRandomly();
             cherry.placeRandomly();
-            player.setPosition(sf::Vector2f(740, 740));
             for (int i = 0; i < 4; ++i) {
                 delete ghosts[i];
             }
@@ -151,6 +197,8 @@ class Game {
             ghosts[1] = new Ghost(window, 20, 6, 18,"blue");
             ghosts[2] = new Ghost(window, 20, 8, 7,"green");
             ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
+            player.setPosition(sf::Vector2f(740, 740));
+            siren.stop();
         }
 
         ~Game() {

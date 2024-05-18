@@ -11,48 +11,20 @@ class Maze : public Elements {
     public:
         int **maze;
         Maze(){}
-        Maze(int gs,int width){
-            right_corner.loadFromFile("right-corner.png");
-            left_corner.loadFromFile("left-corner.png");
-            b_left_corner.loadFromFile("bottom-left-corner.png");
-            b_right_corner.loadFromFile("bottom-right-corner.png");
-            top_line.loadFromFile("top-line.png");
-            left_line.loadFromFile("left-line.png");
+        Maze(int gs,int width) : gridSize(gs), cellSize(width/gridSize) {
+            right_corner.loadFromFile("images/right-corner.png");
+            left_corner.loadFromFile("images/left-corner.png");
+            b_left_corner.loadFromFile("images/bottom-left-corner.png");
+            b_right_corner.loadFromFile("images/bottom-right-corner.png");
+            top_line.loadFromFile("images/top-line.png");
+            left_line.loadFromFile("images/left-line.png");
             top_line.setSmooth(true);
             left_line.setSmooth(true);
-            gridSize = gs;
-            cellSize = width/gridSize;
             maze = new int*[gridSize];
             for (int i = 0; i < gridSize; ++i) {
                 maze[i] = new int[gridSize];
             }
-            int layout[gridSize][gridSize] = {
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-                {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
-                {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
-                {1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1},
-                {1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            };
-            for (int i = 0; i < gridSize; ++i) {
-                for (int j = 0; j < gridSize; ++j) {
-                    maze[i][j] = layout[i][j];
-                }
-            }
+            setupMaze();
         }
         virtual void draw(sf::RenderWindow& window) override {
             sf::RectangleShape shape(sf::Vector2f(cellSize, cellSize));
@@ -131,5 +103,16 @@ class Maze : public Elements {
         }
         bool isWall(int x,int y){
             return !(maze[y][x] != 1);
+        }
+
+        void setupMaze(){
+            std::ifstream file { "maze.txt" };
+            int layout[gridSize][gridSize];
+            for (int i{}; i != gridSize; ++i) {
+                for (int j{}; j != gridSize; ++j) {
+                    file >> layout[i][j];
+                    maze[i][j] = layout[i][j];
+                }
+            }
         }
 };

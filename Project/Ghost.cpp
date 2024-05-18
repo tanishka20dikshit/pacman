@@ -11,7 +11,7 @@ class Ghost : public Entities {
 
         Ghost(sf::RenderWindow& window,int gs,int x, int y, std::string color) : gridSize(gs) {
             cellSize = window.getSize().x / gridSize;
-            ghostTexture.loadFromFile("ghost_"+color+".png");
+            ghostTexture.loadFromFile("images/ghost_"+color+".png");
             ghost.setTexture(ghostTexture);
             ghost.setOrigin(ghostTexture.getSize().x / 2, ghostTexture.getSize().y / 2);
             ghost.setScale(cellSize / ghost.getLocalBounds().width, cellSize / ghost.getLocalBounds().height);

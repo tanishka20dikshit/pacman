@@ -7,7 +7,7 @@ class Pacman : public Entities {
         sf::Clock clk;
         int cellSize;
         int gridSize;
-        float speed = 200.0f;
+        float speed = 250.0f;
         bool boost = false;
         bool changed = false;
     public:
@@ -15,8 +15,8 @@ class Pacman : public Entities {
 
         Pacman(sf::RenderWindow& window,int gs) : gridSize(gs) {
             cellSize = window.getSize().x / gridSize;
-            pacmanTexture.loadFromFile("pacman.png");
-            pacmanfTexture.loadFromFile("pacman-full.png");
+            pacmanTexture.loadFromFile("images/pacman.png");
+            pacmanfTexture.loadFromFile("images/pacman-full.png");
             pacman.setTexture(pacmanTexture);
             pacman.setOrigin(pacmanTexture.getSize().x / 2, pacmanTexture.getSize().y / 2);
             pacman.setPosition(window.getSize().x / 2, window.getSize().y / 2);

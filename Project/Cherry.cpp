@@ -9,7 +9,7 @@ class Cherry : public Collectables {
     public:
         Cherry(){}
         Cherry(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {
-            cherryTexture.loadFromFile("cherry.png");
+            cherryTexture.loadFromFile("images/cherry.png");
             placeRandomly();
         }
         

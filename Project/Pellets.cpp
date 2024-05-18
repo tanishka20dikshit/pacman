@@ -4,9 +4,14 @@ class Pellets : public Collectables {
         int cellSize;
         int points = 10;
         int **maze;
+        sf::SoundBuffer buffer;
+        sf::Sound sound;
     public:
         Pellets(){}
-        Pellets(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {}
+        Pellets(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {
+            buffer.loadFromFile("sounds/sound_eating.mp3");
+            sound.setBuffer(buffer);
+        }
         virtual void draw(sf::RenderWindow& window) override {
             sf::CircleShape dot(cellSize / 12);
             dot.setFillColor(sf::Color::White);
@@ -27,6 +32,9 @@ class Pellets : public Collectables {
             int Y = pos.y / (cellSize);
             if(maze[Y][X] == 0){
                 maze[Y][X] = 8;
+                if(sound.getStatus() != sf::Sound::Status::Playing){
+                    sound.play();
+                }
                 return points;
             }
             return 0;
