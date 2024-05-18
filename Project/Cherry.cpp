@@ -8,10 +8,7 @@ class Cherry : public Collectables {
         sf::Texture cherryTexture;
     public:
         Cherry(){}
-        Cherry(int gs,int width,int ** mz){
-            gridSize = gs;
-            cellSize = width/gridSize;
-            maze = mz;
+        Cherry(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {
             cherryTexture.loadFromFile("cherry.png");
             placeRandomly();
         }

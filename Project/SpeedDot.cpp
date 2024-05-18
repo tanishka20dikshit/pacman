@@ -5,12 +5,15 @@ class SpeedDot : public Collectables {
         int points = 50;
         int n = 3; // Number of speed dots to be placed
         int **maze;
+        float scaleFactor = 1.0f;
+        bool isScalingDown = false;
+        sf::Clock animationClock;
     public:
         SpeedDot(){}
-        SpeedDot(int gs,int width,int ** mz){
-            gridSize = gs;
-            cellSize = width/gridSize;
-            maze = mz;
+        SpeedDot(int gs,int width,int ** mz): gridSize(gs), cellSize(width/gridSize), maze(mz) {
+            placeRandomly();
+        }
+        void placeRandomly() {
             int count = 0;
             while (count < n) {
                 int x = rand() % gridSize;
@@ -22,7 +25,7 @@ class SpeedDot : public Collectables {
             }
         }
         virtual void draw(sf::RenderWindow& window) override {
-            sf::CircleShape dot(cellSize / 4);
+            sf::CircleShape dot((cellSize / 3)*scaleFactor);
             dot.setFillColor(sf::Color::White);
             float offset = (cellSize - dot.getRadius() * 2) / 2;
             for (int y = 0; y < gridSize; ++y) {
@@ -33,6 +36,20 @@ class SpeedDot : public Collectables {
                     }
                 }
             }
+            if (animationClock.getElapsedTime().asMilliseconds() > 10) {
+                if (isScalingDown) {
+                    scaleFactor -= 0.01f;
+                    if (scaleFactor <= 0.5f) {
+                        isScalingDown = false;
+                    }
+                } else {
+                    scaleFactor += 0.01f;
+                    if (scaleFactor >= 1.0f) {
+                        isScalingDown = true; 
+                    }
+                }
+                animationClock.restart();
+            }
         }
 
         int addPoints(Pacman &pacman){
@@ -42,7 +59,7 @@ class SpeedDot : public Collectables {
             pacman.increaseSpeed(false);
             if(maze[Y][X] == 2){
                 maze[Y][X] = 8;
-                sf::sleep(sf::seconds(0.3));
+                //sf::sleep(sf::seconds(0.3));
                 pacman.increaseSpeed(true);
                 return points;
             }

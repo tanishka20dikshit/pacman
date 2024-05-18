@@ -6,11 +6,7 @@ class Pellets : public Collectables {
         int **maze;
     public:
         Pellets(){}
-        Pellets(int gs,int width,int ** mz){
-            gridSize = gs;
-            cellSize = width/gridSize;
-            maze = mz;
-        }
+        Pellets(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {}
         virtual void draw(sf::RenderWindow& window) override {
             sf::CircleShape dot(cellSize / 12);
             dot.setFillColor(sf::Color::White);

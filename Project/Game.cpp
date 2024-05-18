@@ -18,7 +18,7 @@ class Game {
         bool isAlive = false;
         int width;
         int height;
-        int direction; // 0 left,1 right,2 up,3 down,4 none
+        int direction = 4; // 0 left,1 right,2 up,3 down,4 none
         sf::RenderWindow window;
         sf::Font font;
         sf::Text score;
@@ -94,7 +94,7 @@ class Game {
                     for (int i = 0; i < 4; ++i) {
                         ghosts[i]->move(0, maze, time);
                         if (ghosts[i]->checkDeath(player)){
-                            isAlive = false; 
+                            resetGame(); 
                         };
                     }
                 }
@@ -109,14 +109,11 @@ class Game {
         void handlingKeys() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 direction = 0;
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
                 direction = 1;
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                 direction = 2;
-            }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+            }else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 direction = 3;
             }
         }
@@ -140,6 +137,22 @@ class Game {
             }
             window.display();
         }
+
+        void resetGame(){
+            isAlive = false;
+            maze.reset();
+            speedDot.placeRandomly();
+            cherry.placeRandomly();
+            player.setPosition(sf::Vector2f(740, 740));
+            for (int i = 0; i < 4; ++i) {
+                delete ghosts[i];
+            }
+            ghosts[0] = new Ghost(window, 20, 1, 1,"red");
+            ghosts[1] = new Ghost(window, 20, 6, 18,"blue");
+            ghosts[2] = new Ghost(window, 20, 8, 7,"green");
+            ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
+        }
+
         ~Game() {
             for (int i = 0; i < 4; ++i) {
                 delete ghosts[i];

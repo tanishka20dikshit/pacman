@@ -8,6 +8,7 @@ class Ghost : public Entities {
         sf::Sprite ghost;
     public:
         Ghost(){}
+
         Ghost(sf::RenderWindow& window,int gs,int x, int y, std::string color) : gridSize(gs) {
             cellSize = window.getSize().x / gridSize;
             ghostTexture.loadFromFile("ghost_"+color+".png");
@@ -17,9 +18,11 @@ class Ghost : public Entities {
             ghost.setPosition(y * cellSize + (cellSize / 2), x * cellSize + (cellSize / 2));
             std::cout << "Ghost installed lol" << std::endl;
         }
+
         virtual void draw(sf::RenderWindow& window) override {
             window.draw(ghost);
         }
+
         virtual bool move(int direction,Maze maze,float time) override {
             float fSpeed = time * speed;
             sf::Vector2f ghostMov = getMovement(change,fSpeed);
@@ -41,12 +44,15 @@ class Ghost : public Entities {
             }
             return true;
         }
+
         virtual void setPosition(const sf::Vector2f& newPos) override {
             ghost.setPosition(newPos);
         }
+
         virtual sf::Vector2f getPosition() const override {
             return ghost.getPosition();
         }
+
         sf::Vector2f getMovement(int change,float fSpeed) {
             sf::Vector2f ghostMov(0.0f, 0.0f);
             switch (change) {
@@ -65,6 +71,11 @@ class Ghost : public Entities {
             }
             return ghostMov;
         }
+
+        virtual float getSpeed(){
+            return speed;
+        }
+        
         bool checkDeath(Pacman p){
             sf::Vector2f PacPos = p.getPosition();
             sf::Vector2f GhostPos = ghost.getPosition();
