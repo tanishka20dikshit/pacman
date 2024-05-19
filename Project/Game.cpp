@@ -17,22 +17,18 @@ class Game {
     private:
         sf::RenderWindow window;
         sf::Font font;
-        sf::Text score;
-        sf::Text livesText;
-        sf::Text title;
-        sf::Text playText;
-        sf::SoundBuffer buffer;
-        sf::Sound siren;
-        sf::SoundBuffer buffer_ready;
-        sf::Sound sound_ready;
-        sf::Clock clock;
+        sf::Text score, livesText, title, playText, highScoreText;
+        sf::SoundBuffer buffer, buffer_ready, buffer_die; 
+        sf::Sound siren, sound_ready, sound_die;
+        sf::Clock clock, clock_die;
+        int width,height;
+        int highScore = 0;
         int points = 0;
         int lives = 3;
+        int direction = 0; // 0 left,1 right,2 up,3 down,4 none
         bool isAlive = false;
         bool canGameStart = false;
-        int width;
-        int height;
-        int direction = 0; // 0 left,1 right,2 up,3 down,4 none
+        bool isDying = false;
         Maze maze;
         Pacman player;
         Ghost* ghosts[4];
@@ -82,12 +78,23 @@ class Game {
             playText.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
             playText.setPosition(window.getSize().x / 2.0f, 500);
 
+            highScoreText = sf::Text ("HIGH SCORE: 0", font, 20);
+            highScoreText.setFillColor(sf::Color::White);
+            sf::FloatRect highScoreTextBounds = highScoreText.getLocalBounds();
+            highScoreText.setPosition(10, 15);
+
             /// Sound
             buffer.loadFromFile("sounds/sound_siren.wav");
             siren.setBuffer(buffer);
             buffer_ready.loadFromFile("sounds/sound_ready.mp3");
             sound_ready.setBuffer(buffer_ready);
+            buffer_die.loadFromFile("sounds/sound_die.mp3");
+            sound_die.setBuffer(buffer_die);
             siren.setLoop(true);
+            
+            /// High score
+            std::ifstream file("highscore.txt");
+            file >> highScore;
         }
         void run() {
             auto sTime = std::chrono::high_resolution_clock::now();
@@ -104,7 +111,7 @@ class Game {
                 std::chrono::duration<float> elapsed = cTime - sTime;
                 sTime = cTime;
                 float time = elapsed.count();
-                if(isAlive){
+                if(isAlive and !isDying){
                     if (!player.move(direction, maze, time)) {
                         direction = 4;
                     }
@@ -113,7 +120,8 @@ class Game {
                         if (ghosts[i]->checkDeath(player)){
                             lives--;
                             if(lives == 0){
-                                resetGame(); 
+                                isDying = true;
+                                clock_die.restart();
                             }else{
                                 player.setPosition(sf::Vector2f(740, 740));
                             }
@@ -124,6 +132,17 @@ class Game {
                     points += cherry.addPoints(player);
                     score.setString("P* " + std::to_string(points));
                     livesText.setString("Lives " + std::to_string(lives));
+                }
+                if(isDying){
+                    if(clock_die.getElapsedTime().asSeconds() > 1.5){
+                        isDying = false;
+                        resetGame(); 
+                    }else{
+                        if(sound_die.getStatus() != sf::Sound::Playing){
+                            siren.stop();
+                            sound_die.play();
+                        }
+                    }
                 }
                 render();
             }
@@ -152,9 +171,11 @@ class Game {
         }
 
         void render() {
-            window.clear(isAlive ? sf::Color::Black : sf::Color(50, 50, 50));
+            window.clear();
             if(!isAlive){
                 window.draw(title);
+                window.draw(highScoreText);
+                highScoreText.setString("HIGH SCORE: " + std::to_string(highScore));
                 if(!canGameStart){
                     if(sound_ready.getStatus() != sf::Sound::Playing){
                         sound_ready.play();
@@ -186,6 +207,10 @@ class Game {
             clock.restart();
             lives = 3;
             direction = 0;
+            if(points > highScore){
+                highScore = points;
+                std::ofstream("highscore.txt") << highScore;
+            }
             points = 0;
             maze.reset();
             speedDot.placeRandomly();
@@ -198,7 +223,6 @@ class Game {
             ghosts[2] = new Ghost(window, 20, 8, 7,"green");
             ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
             player.setPosition(sf::Vector2f(740, 740));
-            siren.stop();
         }
 
         ~Game() {
