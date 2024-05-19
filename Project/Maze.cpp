@@ -93,13 +93,7 @@ class Maze : public Elements {
             }
         }
         void reset(){
-            for(int i = 0;i < gridSize;i++){
-                for(int j = 0;j < gridSize;j++){
-                    if(maze[i][j] != 1){
-                        maze[i][j] = 0;
-                    }
-                }
-            }
+            setupMaze();
         }
         bool isWall(int x,int y){
             return !(maze[y][x] != 1);
