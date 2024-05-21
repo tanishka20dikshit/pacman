@@ -3,10 +3,10 @@
 #include <ctime>
 #include <iostream>
 
-#include "Cherry.cpp"
-#include "Collectables.cpp"
-#include "Maze.cpp"
-#include "Pacman.cpp"
+#include "Cherry.h"
+#include "Collectables.h"
+#include "Maze.h"
+#include "Pacman.h"
 
 // Test drawing cherry
 void testCherryDrawing(sf::RenderWindow &window,Cherry cherry) 
