@@ -8,3 +8,7 @@ g++ GameTest.cpp Cherry.cpp Collectables.cpp Elements.cpp Entities.cpp Game.cpp 
  g++ PacmanTest.cpp Cherry.cpp Collectables.cpp Elements.cpp Entities.cpp Game.cpp Ghost.cpp Maze.cpp Pacman.cpp Pellets.cpp SpeedDot.cpp  -I/opt/homebrew/Cellar/sfml/2.6.1/include -o app -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system -std=c++11 -lsfml-audio -std=c++11
  g++ SpeedDotTest.cpp Cherry.cpp Collectables.cpp Elements.cpp Entities.cpp Game.cpp Ghost.cpp Maze.cpp Pacman.cpp Pellets.cpp SpeedDot.cpp  -I/opt/homebrew/Cellar/sfml/2.6.1/include -o app -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system -std=c++11 -lsfml-audio -std=c++11
  g++ PelletsTest.cpp Cherry.cpp Collectables.cpp Elements.cpp Entities.cpp Game.cpp Ghost.cpp Maze.cpp Pacman.cpp Pellets.cpp SpeedDot.cpp  -I/opt/homebrew/Cellar/sfml/2.6.1/include -o app -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system -std=c++11 -lsfml-audio -std=c++11
+
+
+
+g++  CherryTest.cpp -I/opt/homebrew/Cellar/sfml/2.6.1/include -o app -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system -std=c++11 -lsfml-audio -std=c++11
