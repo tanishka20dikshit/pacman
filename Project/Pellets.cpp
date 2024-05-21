@@ -1,4 +1,5 @@
 #include "Pellets.h"
+<<<<<<< HEAD
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -34,11 +35,41 @@ int Pellets::addPoints(Pacman pacman) {
     if (maze[Y][X] == 0) {
         maze[Y][X] = 8;
         if (sound.getStatus() != sf::Sound::Status::Playing) {
+=======
+Pellets::Pellets(){}
+        
+Pellets::Pellets(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {
+    buffer.loadFromFile("sounds/sound_eating.mp3");
+    sound.setBuffer(buffer);
+}
+void Pellets::draw(sf::RenderWindow& window) {
+    sf::CircleShape dot(cellSize / 12);
+    dot.setFillColor(sf::Color::White);
+    float offset = (cellSize - dot.getRadius() * 2) / 2;
+    for (int y = 0; y < gridSize; ++y) {
+        for (int x = 0; x < gridSize; ++x) {
+            if (maze[y][x] == 0) {
+                dot.setPosition(x * cellSize + offset, y * cellSize + offset);
+                window.draw(dot);
+            }
+        }
+    }
+}
+
+int Pellets::addPoints(Pacman pacman){
+    sf::Vector2f pos = pacman.getPosition();
+    int X = pos.x / (cellSize);
+    int Y = pos.y / (cellSize);
+    if(maze[Y][X] == 0){
+        maze[Y][X] = 8;
+        if(sound.getStatus() != sf::Sound::Status::Playing){
+>>>>>>> abcc5d7128c62abc84e12feeadabe743d0576259
             sound.play();
         }
         return points;
     }
     return 0;
+<<<<<<< HEAD
 }
 
 // Getter functions
@@ -65,3 +96,6 @@ sf::SoundBuffer& Pellets::getBuffer() {
 sf::Sound& Pellets::getSound() {
     return sound;
 }
+=======
+};
+>>>>>>> abcc5d7128c62abc84e12feeadabe743d0576259
