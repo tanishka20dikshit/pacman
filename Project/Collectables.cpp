@@ -1,7 +1,7 @@
-class Collectables : public Elements{
-    private:
-        int points;
-    public:
-        Collectables() {}
-        virtual void addPoints(int points){};
-};
+#include "Collectables.h"
+
+Collectables::Collectables() {}
+
+int Collectables::addPoints(Pacman pacman) {
+    return 0;
+}
