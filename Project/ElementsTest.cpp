@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Elements.cpp"
-#include "Cherry.cpp"
+#include "Elements.h"
+#include "Cherry.h"
 
 
 void testSetPosition(Cherry cherry ) {
@@ -34,7 +34,7 @@ int main() {
   Maze maze(20, 20);
 
   // Initialize cherry object
-  Cherry cherry(20, 800, maze.maze);
+  Cherry cherry(20, 800, maze.getMaze());
 
     testSetPosition(cherry);
     testGetPosition(cherry);

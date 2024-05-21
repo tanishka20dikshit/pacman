@@ -10,7 +10,7 @@
 
 // Test drawing cherry
 void testCherryDrawing(sf::RenderWindow &window,Cherry cherry) 
-{  
+{    while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
       window.clear();
@@ -20,12 +20,13 @@ void testCherryDrawing(sf::RenderWindow &window,Cherry cherry)
         window.close();
       }
     }
+}
   std::cout << "Cherry drawing test passed!" << std::endl;
 }
 
 // Test texture
 void testTexture(Cherry cherry) {
-  if (cherry.cherryTexture.loadFromFile("cherry.png")) {
+  if (cherry.getTexture().loadFromFile("images/cherry.png")) {
     std::cout << "testTexture cherry passed!" << std::endl;
   } else {
     std::cout << "testTexture cherry failed!" << std::endl;
@@ -33,12 +34,12 @@ void testTexture(Cherry cherry) {
 }
 
 // Test cherry placement
-void testCherryPlacement(Cherry cherry, Maze maze) {
+void testCherryPlacement(Cherry cherry) {
   // Check if cherries are placed on the grid
   bool cherryPlaced = false;
-  for (int y = 0; y < maze.gridSize; ++y) {
-    for (int x = 0; x < maze.gridSize; ++x) {
-      if (maze.maze[y][x] == 3) {
+  for (int y = 0; y < cherry.getGridSize(); ++y) {
+    for (int x = 0; x < cherry.getGridSize(); ++x) {
+      if (cherry.getMaze()[y][x] == 3) {
         cherryPlaced = true;
         break;
       }
@@ -53,15 +54,15 @@ void testCherryPlacement(Cherry cherry, Maze maze) {
   }
 }
 
-void testCherryPoints(Pacman pacman, Cherry cherry, Maze maze) {
+void testCherryPoints(Pacman pacman, Cherry cherry) {
   // Manually place a cherry at a known location
-  maze.maze[1][1] = 3;
-  pacman.setPosition(sf::Vector2f(1 * cherry.cellSize, 1 * (cherry.cellSize)));
+  cherry.getMaze()[1][1] = 3;
+  pacman.setPosition(sf::Vector2f(1 * cherry.getCellSize(), 1 * (cherry.getCellSize())));
 
   // Pacman eats the cherry
   int points = cherry.addPoints(pacman);
 
-  if (points == 100 && maze.maze[1][1] == 8) {
+  if (points == 100 && cherry.getMaze()[1][1] == 8) {
     std::cout << "Test Passed: Cherry correctly consumed and points added.\n";
   } else {
     std::cout << "Test Failed: Cherry not consumed correctly.\n";
@@ -80,7 +81,7 @@ int main() {
   Maze maze(20, 20);
 
   // Initialize cherry object
-  Cherry cherry(20, 800, maze.maze);
+  Cherry cherry(20, 800, maze.getMaze());
 
   // Test drawing cherry
   testCherryDrawing(window, cherry);
@@ -89,10 +90,10 @@ int main() {
   testTexture(cherry);
 
   // Test cherry placement
-  testCherryPlacement(cherry, maze);
+  testCherryPlacement(cherry);
 
   // Test cherry points
-  testCherryPoints(pacman, cherry, maze);
+  testCherryPoints(pacman, cherry);
 
   return 0;
 }

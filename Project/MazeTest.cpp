@@ -1,6 +1,7 @@
-#include "Maze.cpp"
+#include "Maze.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 
 // Test drawing Maze
 void testDrawing(sf::RenderWindow &window, Maze maze) {
@@ -15,38 +16,78 @@ void testDrawing(sf::RenderWindow &window, Maze maze) {
   }
 }
 
+//Test get functions
+
+void testGetCellSize(Maze maze)
+{
+  if(maze.getCellSize()==40){
+        std::cout << "testGetCellSize passed!" << std::endl;
+  }
+  else
+  {
+        std::cout << "testGetCellSize failed!" << std::endl;
+  }
+  
+}
+void testGetGridSize(Maze maze)
+{
+  if(maze.getGridSize()==20){
+        std::cout << "testGetGridSize passed!" << std::endl;
+  }
+  else
+  {
+        std::cout << "testGetGridSize failed!" << std::endl;
+  }
+}
+
+//Test texture
 void testTexture (Maze maze)
 {   
   //Test right texture
-  if (maze.right_corner.loadFromFile("right-corner.png")) {
+  if (maze.getRightCornerTexture().loadFromFile("images/right-corner.png")) {
     std::cout << "testTexture right corner passed!" << std::endl;
   }
   else
   { std::cout << "testTexture right corner failed!" << std::endl; }
 
    //Test left texture
- if (maze.left_corner.loadFromFile("left-corner.png")) {
+ if (maze.getLeftCornerTexture().loadFromFile("images/left-corner.png")) {
     std::cout << "testTexture left corner passed!" << std::endl;
   }
   else
   { std::cout << "testTexture b_left corner failed!" << std::endl; }
    
       //Test bottom left texture
-   if (maze.b_left_corner.loadFromFile("bottom-left-corner.png")) {
+   if (maze.getBottomLeftCornerTexture().loadFromFile("images/bottom-left-corner.png")) {
     std::cout << "testTexture bottom left corner passed!" << std::endl;
   }
   else
   { std::cout << "testTexture bottom left corner failed!" << std::endl; }
    
    //Test bottom right texture
-   if (maze.b_right_corner.loadFromFile("bottom-right-corner.png")) {
+   if (maze.getBottomRightCornerTexture().loadFromFile("images/bottom-right-corner.png")) {
     std::cout << "testTexture bottom right corner passed!" << std::endl;
   }
   else
   { std::cout << "testTexture bottom right corner failed!" << std::endl; }
+  
+  //Test top line corner texture
+   if (maze.getTopLineCornerTexture().loadFromFile("images/top-line.png")) {
+    std::cout << "testTexture top line corner passed!" << std::endl;
+  }
+  else
+  { std::cout << "testTexture top line corner failed!" << std::endl; }
+  
+  //Test left line corner texture
+   if (maze.getLeftLineCornerTexture().loadFromFile("images/bottom-right-corner.png")) {
+    std::cout << "testTexture left line corner passed!" << std::endl;
+  }
+  else
+  { std::cout << "testTexture left line corner failed!" << std::endl; }
+  
 };
 
-
+//Test wall
 void testMaze(Maze maze) {
   // Test maze generation and rendering
   if (maze.isWall(0, 1) == 1) {
@@ -63,6 +104,26 @@ void testMaze(Maze maze) {
   }
 };
 
+//Test set up maze
+void testSetupMaze(Maze maze) {
+    maze.reset();
+    int** layout = maze.getMaze();
+    std::ifstream file("maze.txt");
+    int expected;
+    bool passed = true;
+    for (int i = 0; i < maze.getGridSize(); ++i) {
+        for (int j = 0; j < maze.getGridSize(); ++j) {
+            file >> expected;
+            if (layout[i][j] != expected) {
+                std::cout << "Setup Maze Test failed at (" << i << ", " << j << "). Expected " << expected << " but got " << layout[i][j] << ".\n";
+                passed = false;
+            }
+        }
+    }
+    if (passed) {
+        std::cout << "Setup Maze Test passed.\n";
+    }
+}
 int main() {
    // Create a window for testing purposes
   sf::RenderWindow window(sf::VideoMode(800, 600), "Pacman Unit Test");
@@ -71,13 +132,20 @@ int main() {
   Maze maze(20, 800);
 
   // Test drawing Maze
-testDrawing(window, maze);
+  testDrawing(window, maze);
 
   //Testing texture
   testTexture (maze);
 
+  //Test get functions
+ testGetCellSize(maze);
+ testGetGridSize(maze);
+
   //Testing wall 
   testMaze(maze);
+
+  //Test set up maze
+testSetupMaze(maze);
   std::cout << "All tests passed!\n";
   return 0;
 }

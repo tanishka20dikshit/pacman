@@ -1,7 +1,5 @@
-class Collectables : public Elements{
-    private:
-        int points;
-    public:
-        Collectables() {}
-        virtual void addPoints(int points){};
-};
+#include <SFML/Graphics.hpp>
+#include "Collectables.h"
+
+Collectables::Collectables() {};
+void Collectables::addPoints(int points){};
