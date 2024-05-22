@@ -1,162 +1,164 @@
-#include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
+#include <SFML/Graphics.hpp>   // Include the SFML Graphics module for rendering
+#include <cstdlib>             // Include cstdlib for standard library functions (e.g., srand, rand)
+#include <ctime>               // Include ctime for time functions
+#include <iostream>            // Include iostream for console input/output
+#include "Collectables.h"      // Include the Collectables header
+#include "Entities.h"          // Include the Entities header
+#include "Maze.h"              // Include the Maze header
+#include "Pacman.h"            // Include the Pacman header
+#include "SpeedDot.h"          // Include the SpeedDot header
 
-#include "Collectables.h"  // Ensure this file defines the Collectables class.
-#include "Entities.h"      // Ensure this file defines any dependencies.
-#include "Maze.h"
-#include "Pacman.h"  // Ensure this file defines the Pacman class with relevant methods.
-#include "SpeedDot.h"
-// Test drawing speed dot
+// Function to test drawing the SpeedDot in the window
 void testSpeedDotDrawing(sf::RenderWindow &window, SpeedDot speedDot) {
-  while (window.isOpen()) {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-      window.clear();
-      speedDot.draw(window);
-      window.display();
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
+    while (window.isOpen()) {
+        sf::Event event;  // Event object to handle window events
+        // Poll events in a loop
+        while (window.pollEvent(event)) {
+            window.clear();  // Clear the window with the default color
+            speedDot.draw(window);  // Draw the SpeedDot object in the window
+            window.display();  // Display the updated contents of the window
+            // Check if the close event was triggered
+            if (event.type == sf::Event::Closed) {
+                window.close();  // Close the window
+            }
+        }
     }
-  }
-  std::cout << "Speed Dot drawing test passed!" << std::endl;
-};
-
-void testInitializationAndPlacement(SpeedDot speeddot, Maze maze) {
-  std::cout << "Test Initialization and Placement\n";
-  int dotCount = 0;
-  for (int y = 0; y < maze.getGridSize(); ++y) {
-    for (int x = 0; x < maze.getGridSize(); ++x) {
-      if (maze.getMaze()[y][x] == 2) {
-        dotCount++;
-      }
-    }
-  }
-  if (dotCount == speeddot.getN()) {
-    std::cout << "Passed: Correct number of SpeedDots placed.\n";
-  } else {
-    std::cout << "Failed: Incorrect number of SpeedDots placed (" << dotCount
-              << ").\n";
-  }
+    std::cout << "Speed Dot drawing test passed!" << std::endl;
 }
 
+// Function to test the initialization and placement of SpeedDots in the maze
+void testInitializationAndPlacement(SpeedDot speedDot, Maze maze) {
+    std::cout << "Test Initialization and Placement\n";
+    int dotCount = 0;  // Counter for SpeedDots
+    // Iterate through the maze grid
+    for (int y = 0; y < maze.getGridSize(); ++y) {
+        for (int x = 0; x < maze.getGridSize(); ++x) {
+            // Check if the current cell contains a SpeedDot
+            if (maze.getMaze()[y][x] == 2) {
+                dotCount++;
+            }
+        }
+    }
+    // Verify if the number of placed SpeedDots matches the expected count
+    if (dotCount == speedDot.getN()) {
+        std::cout << "Passed: Correct number of SpeedDots placed.\n";
+    } else {
+        std::cout << "Failed: Incorrect number of SpeedDots placed (" << dotCount << ").\n";
+    }
+}
+
+// Function to test adding points when Pacman collects a SpeedDot
 void testAddPoints(SpeedDot speedDot, Maze maze, Pacman pacman) {
-  std::cout << "Test addPoints Method\n";
+    std::cout << "Test addPoints Method\n";
 
-  pacman.setPosition(sf::Vector2f(0, 0));
+    pacman.setPosition(sf::Vector2f(0, 0));  // Set Pacman's position to (0, 0)
 
-  // Manually place a SpeedDot at Pacman's initial position
-  maze.getMaze()[0][0] = 2;
+    maze.getMaze()[0][0] = 2;  // Place a SpeedDot at (0, 0) in the maze
 
-  int points = speedDot.addPoints(pacman);
-  if (points == speedDot.getPoints()) {
-    std::cout << "Passed: Pacman collected SpeedDot and received points.\n";
-  } else {
-    std::cout << "Failed: Pacman did not collect SpeedDot correctly (" << points
-              << " points).\n";
-  }
+    int points = speedDot.addPoints(pacman);  // Pacman collects the SpeedDot
+    // Check if the collected points match the expected points for SpeedDot
+    if (points == speedDot.getPoints()) {
+        std::cout << "Passed: Pacman collected SpeedDot and received points.\n";
+    } else {
+        std::cout << "Failed: Pacman did not collect SpeedDot correctly (" << points << " points).\n";
+    }
 
-  if (maze.getMaze()[0][0] == 8) {
-    std::cout << "Passed: SpeedDot removed from maze after collection.\n";
-  } else {
-    std::cout << "Failed: SpeedDot not removed from maze after collection.\n";
-  }
-};
+    // Verify if the SpeedDot was removed from the maze after collection
+    if (maze.getMaze()[0][0] == 8) {
+        std::cout << "Passed: SpeedDot removed from maze after collection.\n";
+    } else {
+        std::cout << "Failed: SpeedDot not removed from maze after collection.\n";
+    }
+}
 
-// Test get grid size
+// Function to test getting the grid size of the SpeedDot
 void testGetGridSize(SpeedDot speedDot) {
-  if (speedDot.getGridSize() == 20) {
-    std::cout << "testGetGridSize passed!" << std::endl;
-  } else {
-    std::cout << "testGetGridSize failed!" << std::endl;
-  }
+    // Check if the grid size matches the expected value
+    if (speedDot.getGridSize() == 20) {
+        std::cout << "testGetGridSize passed!" << std::endl;
+    } else {
+        std::cout << "testGetGridSize failed!" << std::endl;
+    }
 }
 
-// Test get cell size
+// Function to test getting the cell size of the SpeedDot
 void testGetCellSize(SpeedDot speedDot) {
-  if (speedDot.getCellSize() == 40) {
-    std::cout << "testGetCellSize passed!" << std::endl;
-  } else {
-    std::cout << "testGetCellSize failed!" << std::endl;
-  }
+    // Check if the cell size matches the expected value
+    if (speedDot.getCellSize() == 40) {
+        std::cout << "testGetCellSize passed!" << std::endl;
+    } else {
+        std::cout << "testGetCellSize failed!" << std::endl;
+    }
 }
 
-// Test get points
+// Function to test getting the points value of the SpeedDot
 void testGetPoints(SpeedDot speedDot) {
-  if (speedDot.getPoints() == 50) {
-    std::cout << "testGetPoints passed!" << std::endl;
-  } else {
-    std::cout << "testGetPoints failed!" << std::endl;
-  }
+    // Check if the points value matches the expected value
+    if (speedDot.getPoints() == 50) {
+        std::cout << "testGetPoints passed!" << std::endl;
+    } else {
+        std::cout << "testGetPoints failed!" << std::endl;
+    }
 }
 
-// Test get Number Of Dots
+// Function to test getting the number of SpeedDots
 void testgetN(SpeedDot speedDot) {
-  if (speedDot.getN() == 3) {
-    std::cout << "testgetN passed!" << std::endl;
-  } else {
-    std::cout << "testgetN failed!" << std::endl;
-  }
+    // Check if the number of SpeedDots matches the expected value
+    if (speedDot.getN() == 3) {
+        std::cout << "testgetN passed!" << std::endl;
+    } else {
+        std::cout << "testgetN failed!" << std::endl;
+    }
 }
 
-// Test get Scale Factor
+// Function to test getting the scale factor of the SpeedDot
 void testGetScaleFactor(SpeedDot speedDot) {
-  if (speedDot.getScaleFactor() == 1.0f) {
-    std::cout << "testGetScaleFactor passed!" << std::endl;
-  } else {
-    std::cout << "testGetScaleFactor failed!" << std::endl;
-  }
+    // Check if the scale factor matches the expected value
+    if (speedDot.getScaleFactor() == 1.0f) {
+        std::cout << "testGetScaleFactor passed!" << std::endl;
+    } else {
+        std::cout << "testGetScaleFactor failed!" << std::endl;
+    }
 }
 
-// Test get is scaling down
+// Function to test if the SpeedDot is scaling down
 void testGetIsScalingDown(SpeedDot speedDot) {
-  if (speedDot.getIsScalingDown() == false) {
-    std::cout << "testGetSpeed passed!" << std::endl;
-  } else {
-    std::cout << "testGetSpeed failed!" << std::endl;
-  }
+    // Check if the scaling down status matches the expected value
+    if (speedDot.getIsScalingDown() == false) {
+        std::cout << "testGetSpeed passed!" << std::endl;
+    } else {
+        std::cout << "testGetSpeed failed!" << std::endl;
+    }
 }
 
 int main() {
-  srand(static_cast<unsigned>(time(0)));  // Seed random number generator
-  // Initilize Window for testing purpose
-  sf::RenderWindow window(sf::VideoMode(800, 800), "Speed Dot Unit Test");
+    srand(static_cast<unsigned>(time(0)));  // Seed the random number generator
 
-  // Initialize Pacman object
-  Pacman pacman(window, 20);
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Speed Dot Unit Test");  // Create a window for rendering
 
-  // Initialize Maze
-  Maze maze(20, 20);
+    Pacman pacman(window, 20);  // Create a Pacman object with the window and grid size
 
-  // Initialize speed dot object
-  SpeedDot speedDot(20, 800, maze.getMaze());
+    Maze maze(20, 20);  // Create a Maze object with grid size 20x20
 
-  // Test drawing speed dot
-  testSpeedDotDrawing(window, speedDot);
+    SpeedDot speedDot(20, 800, maze.getMaze());  // Create a SpeedDot object with grid size, window size, and maze reference
 
-  // Test Initialization And Placement
-  testInitializationAndPlacement(speedDot, maze);
+    testSpeedDotDrawing(window, speedDot);  // Run the test for drawing SpeedDot
 
-  // Test Add Points
-  testAddPoints(speedDot, maze, pacman);
+    testInitializationAndPlacement(speedDot, maze);  // Run the test for SpeedDot initialization and placement
 
-  // Test get grid size
-  testGetGridSize(speedDot);
-  // Test get cell size
-  testGetCellSize(speedDot);
+    testAddPoints(speedDot, maze, pacman);  // Run the test for adding points when collecting SpeedDot
 
-  // Test get points
-  testGetPoints(speedDot);
+    testGetGridSize(speedDot);  // Run the test for getting grid size of SpeedDot
 
-  // Test get Number Of Dots
-  testgetN(speedDot);
+    testGetCellSize(speedDot);  // Run the test for getting cell size of SpeedDot
 
-  // Test get Scale Factor
-  testGetScaleFactor(speedDot);
+    testGetPoints(speedDot);  // Run the test for getting points value of SpeedDot
 
-  // Test get is scaling down
-  testGetIsScalingDown(speedDot);
-  return 0;
+    testgetN(speedDot);  // Run the test for getting the number of SpeedDots
+
+    testGetScaleFactor(speedDot);  // Run the test for getting the scale factor of SpeedDot
+
+    testGetIsScalingDown(speedDot);  // Run the test for checking if SpeedDot is scaling down
+
+    return 0;  // Exit the program
 }
