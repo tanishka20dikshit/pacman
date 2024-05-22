@@ -43,6 +43,21 @@ class Game {
         void handleClicks();
         void render();
         void resetGame();
+        sf::Font getFont();
+        sf::Text getScore();
+        sf::Text getLivesText();
+        sf::Text getTitle();
+        sf::Text getPlayText();
+        sf::Text getHighScoreText();
+        int getWidth();
+        int getHeight();
+        int getHighScore();
+        int getPoints ();
+        int getLives ();
+        int getDirection (); 
+        bool getIsAlive ();
+        bool getCanGameStart();
+        bool getIsDying();
         ~Game();
 };
 

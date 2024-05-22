@@ -1,20 +1,23 @@
 #include "Maze.h"
 Maze::Maze(){}
 
-Maze::Maze(int gs,int width) : gridSize(gs), cellSize(width/gridSize) {
-    right_corner.loadFromFile("images/right-corner.png");
-    left_corner.loadFromFile("images/left-corner.png");
-    b_left_corner.loadFromFile("images/bottom-left-corner.png");
-    b_right_corner.loadFromFile("images/bottom-right-corner.png");
-    top_line.loadFromFile("images/top-line.png");
-    left_line.loadFromFile("images/left-line.png");
-    top_line.setSmooth(true);
-    left_line.setSmooth(true);
-    maze = new int*[gridSize];
-    for (int i = 0; i < gridSize; ++i) {
-        maze[i] = new int[gridSize];
+Maze::Maze(int gs, int width) : gridSize(gs), cellSize(width / gridSize) {
+    if (!right_corner.loadFromFile("images/right-corner.png") ||
+        !left_corner.loadFromFile("images/left-corner.png") ||
+        !b_left_corner.loadFromFile("images/bottom-left-corner.png") ||
+        !b_right_corner.loadFromFile("images/bottom-right-corner.png") ||
+        !top_line.loadFromFile("images/top-line.png") ||
+        !left_line.loadFromFile("images/left-line.png")) {
+        std::cerr << "Error: Failed to load one or more maze texture files." << std::endl;
+    } else {
+        top_line.setSmooth(true);
+        left_line.setSmooth(true);
+        maze = new int*[gridSize];
+        for (int i = 0; i < gridSize; ++i) {
+            maze[i] = new int[gridSize];
+        }
+        setupMaze();
     }
-    setupMaze();
 }
 
 void Maze::draw(sf::RenderWindow& window) {
@@ -105,4 +108,36 @@ void Maze::setupMaze(){
 
 int **Maze::getMaze(){
     return maze;
+}
+
+int Maze::getGridSize() const {
+    return gridSize;
+}
+
+int Maze::getCellSize() const {
+    return cellSize;
+}
+
+sf::Texture Maze::getRightCorner() const {
+    return right_corner;
+}
+
+sf::Texture Maze::getLeftCorner() const {
+    return left_corner;
+}
+
+sf::Texture Maze::getBottomRightCorner() const {
+    return b_right_corner;
+}
+
+sf::Texture Maze::getBottomLeftCorner() const {
+    return b_left_corner;
+}
+
+sf::Texture Maze::getTopLine() const {
+    return top_line;
+}
+
+sf::Texture Maze::getLeftLine() const {
+    return left_line;
 }

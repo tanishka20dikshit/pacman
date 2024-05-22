@@ -2,8 +2,11 @@
 Cherry::Cherry(){}
         
 Cherry::Cherry(int gs,int width,int ** mz) : gridSize(gs), cellSize(width/gridSize), maze(mz) {
-    cherryTexture.loadFromFile("images/cherry.png");
-    placeRandomly();
+    if (!cherryTexture.loadFromFile("images/cherry.png")) {
+        std::cerr << "Error: Failed to load cherry texture file." << std::endl;
+    } else {
+        placeRandomly();
+    }
 }
 
 void Cherry::draw(sf::RenderWindow& window) {
@@ -43,3 +46,27 @@ void Cherry::placeRandomly(){
         }
     }
 };
+
+int Cherry::getGridSize() const {
+    return gridSize;
+}
+
+int Cherry::getCellSize() const {
+    return cellSize;
+}
+
+int Cherry::getPoints() const {
+    return points;
+}
+
+int Cherry::getN() const {
+    return n;
+}
+
+int** Cherry::getMaze() const {
+    return maze;
+}
+
+sf::Texture Cherry::getCherryTexture() const {
+    return cherryTexture;
+}

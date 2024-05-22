@@ -1,14 +1,17 @@
 #include "Ghost.h"
 Ghost::Ghost(){}
 
-Ghost::Ghost(sf::RenderWindow& window,int gs,int x, int y, std::string color) : gridSize(gs) {
+Ghost::Ghost(sf::RenderWindow& window, int gs, int x, int y, std::string color) : gridSize(gs) {
     cellSize = window.getSize().x / gridSize;
-    ghostTexture.loadFromFile("images/ghost_"+color+".png");
-    ghost.setTexture(ghostTexture);
-    ghost.setOrigin(ghostTexture.getSize().x / 2, ghostTexture.getSize().y / 2);
-    ghost.setScale(cellSize / ghost.getLocalBounds().width, cellSize / ghost.getLocalBounds().height);
-    ghost.setPosition(y * cellSize + (cellSize / 2), x * cellSize + (cellSize / 2));
-    std::cout << "Ghost installed lol" << std::endl;
+    if (!ghostTexture.loadFromFile("images/ghost_" + color + ".png")) {
+        std::cerr << "Error: Failed to load ghost texture file." << std::endl;
+    } else {
+        ghost.setTexture(ghostTexture);
+        ghost.setOrigin(ghostTexture.getSize().x / 2, ghostTexture.getSize().y / 2);
+        ghost.setScale(cellSize / ghost.getLocalBounds().width, cellSize / ghost.getLocalBounds().height);
+        ghost.setPosition(y * cellSize + (cellSize / 2), x * cellSize + (cellSize / 2));
+        std::cout << "Ghost installed lol" << std::endl;
+    }
 }
 
 void Ghost::draw(sf::RenderWindow& window) {
@@ -79,4 +82,24 @@ bool Ghost::checkDeath(Pacman p){
         return true;
     }
     return false;
+}
+
+int Ghost::getChange() const {
+    return change;
+}
+
+int Ghost::getCellSize() const {
+    return cellSize;
+}
+
+int Ghost::getGridSize() const {
+    return gridSize;
+}
+
+sf::Texture Ghost::getGhostTexture() const {
+    return ghostTexture;
+}
+
+sf::Sprite Ghost::getGhost() const {
+    return ghost;
 }

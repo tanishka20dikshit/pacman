@@ -1,6 +1,7 @@
 #ifndef MAZE_H
 #define MAZE_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include "Elements.h"
@@ -25,6 +26,14 @@ class Maze : public Elements {
         bool isWall(int x, int y);
         void setupMaze();
         int **getMaze();
+        int getGridSize() const;
+        int getCellSize() const;
+        sf::Texture getRightCorner() const;
+        sf::Texture getLeftCorner() const;
+        sf::Texture getBottomRightCorner() const;
+        sf::Texture getBottomLeftCorner() const;
+        sf::Texture getTopLine() const;
+        sf::Texture getLeftLine() const;
 };
 
 #endif

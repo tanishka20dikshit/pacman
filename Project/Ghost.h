@@ -26,6 +26,11 @@ class Ghost : public Entities {
         sf::Vector2f getMovement(int change, float fSpeed);
         float getSpeed();
         bool checkDeath(Pacman p);
+        int getChange() const;
+        int getCellSize() const;
+        int getGridSize() const;
+        sf::Texture getGhostTexture() const;
+        sf::Sprite getGhost() const;
 };
 
 #endif

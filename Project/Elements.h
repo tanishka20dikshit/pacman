@@ -6,7 +6,6 @@
 class Elements {
     private:
         sf::Vector2f position;
-
     public:
         Elements();
         virtual void draw(sf::RenderWindow& window) = 0;

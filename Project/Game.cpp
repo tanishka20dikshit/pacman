@@ -16,7 +16,9 @@ Game::Game(int h, int w) :
     ghosts[3] = new Ghost(window, 20, 16, 1,"yellow");
 
     /// Details
-    font.loadFromFile("CrackMan.TTF");
+    if (!font.loadFromFile("CrackMan.TTF")) {
+        std::cerr << "Error: Failed to load font file." << std::endl;
+    }
     score.setFont(font);
     score.setCharacterSize(20);
     score.setFillColor(sf::Color::Yellow);
@@ -47,11 +49,20 @@ Game::Game(int h, int w) :
     highScoreText.setPosition(10, 15);
 
     /// Sound
-    buffer.loadFromFile("sounds/sound_siren.wav");
+    if (!buffer.loadFromFile("sounds/sound_siren.wav")) {
+        std::cerr << "Error: Failed to load siren sound file." << std::endl;
+    }
+
+    if (!buffer_ready.loadFromFile("sounds/sound_ready.mp3")) {
+        std::cerr << "Error: Failed to load ready sound file." << std::endl;
+    }
+
+    if (!buffer_die.loadFromFile("sounds/sound_die.mp3")) {
+        std::cerr << "Error: Failed to load die sound file." << std::endl;
+    }
+
     siren.setBuffer(buffer);
-    buffer_ready.loadFromFile("sounds/sound_ready.mp3");
     sound_ready.setBuffer(buffer_ready);
-    buffer_die.loadFromFile("sounds/sound_die.mp3");
     sound_die.setBuffer(buffer_die);
     siren.setLoop(true);
     
@@ -193,4 +204,64 @@ Game::~Game() {
     for (int i = 0; i < 4; ++i) {
         delete ghosts[i];
     }
+}
+
+sf::Font Game::getFont(){
+    return font;
+}
+
+sf::Text Game::getScore(){
+    return score;
+}
+
+sf::Text Game::getLivesText(){
+    return livesText;
+}
+
+sf::Text Game::getTitle(){
+    return title;
+}
+
+sf::Text Game::getPlayText(){
+    return playText;
+}
+
+sf::Text Game::getHighScoreText(){
+    return highScoreText;
+}
+
+int Game::getWidth(){
+    return width;
+}
+
+int Game::getHeight(){
+    return height;
+}
+
+int Game::getHighScore(){
+    return highScore;
+}
+
+int Game::getPoints(){
+    return points;
+}
+
+int Game::getLives(){
+    return lives;
+}
+
+int Game::getDirection(){
+    return direction;
+}
+
+bool Game::getIsAlive(){
+    return isAlive;
+}
+
+bool Game::getCanGameStart(){
+    return canGameStart;
+}
+
+bool Game::getIsDying(){
+    return isDying;
 }

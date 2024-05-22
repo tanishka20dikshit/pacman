@@ -1,6 +1,7 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Entities.h"
 #include "Maze.h"
@@ -27,6 +28,15 @@ class Pacman : public Entities {
         sf::Vector2f getPosition() const override;
         float getSpeed();
         void increaseSpeed(bool toggle);
+        sf::Texture getPacmanTexture() const;
+        sf::Texture getPacmanfTexture() const;
+        sf::Sprite getPacman() const;
+        sf::Clock getClock() const;
+        sf::Clock getClk() const;
+        int getCellSize() const;
+        int getGridSize() const;
+        bool getBoost() const;
+        bool getChanged() const;
 };
 
 #endif

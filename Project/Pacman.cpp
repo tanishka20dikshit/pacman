@@ -1,14 +1,16 @@
 #include "Pacman.h"
 Pacman::Pacman(){}
 
-Pacman::Pacman(sf::RenderWindow& window,int gs) : gridSize(gs) {
+Pacman::Pacman(sf::RenderWindow& window, int gs) : gridSize(gs) {
     cellSize = window.getSize().x / gridSize;
-    pacmanTexture.loadFromFile("images/pacman.png");
-    pacmanfTexture.loadFromFile("images/pacman-full.png");
-    pacman.setTexture(pacmanTexture);
-    pacman.setOrigin(pacmanTexture.getSize().x / 2, pacmanTexture.getSize().y / 2);
-    pacman.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-    pacman.setScale(cellSize / pacman.getLocalBounds().width, cellSize / pacman.getLocalBounds().height);
+    if (!pacmanTexture.loadFromFile("images/pacman.png") || !pacmanfTexture.loadFromFile("images/pacman-full.png")) {
+        std::cerr << "Error: Failed to load one or more pacman texture files." << std::endl;
+    } else {
+        pacman.setTexture(pacmanTexture);
+        pacman.setOrigin(pacmanTexture.getSize().x / 2, pacmanTexture.getSize().y / 2);
+        pacman.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+        pacman.setScale(cellSize / pacman.getLocalBounds().width, cellSize / pacman.getLocalBounds().height);
+    }
 }
 
 void Pacman::draw(sf::RenderWindow& window) {
@@ -78,4 +80,40 @@ void Pacman::increaseSpeed(bool toggle) {
             boost = false;
         }
     }
+}
+
+sf::Texture Pacman::getPacmanTexture() const {
+    return pacmanTexture;
+}
+
+sf::Texture Pacman::getPacmanfTexture() const {
+    return pacmanfTexture;
+}
+
+sf::Sprite Pacman::getPacman() const {
+    return pacman;
+}
+
+sf::Clock Pacman::getClock() const {
+    return clock;
+}
+
+sf::Clock Pacman::getClk() const {
+    return clk;
+}
+
+int Pacman::getCellSize() const {
+    return cellSize;
+}
+
+int Pacman::getGridSize() const {
+    return gridSize;
+}
+
+bool Pacman::getBoost() const {
+    return boost;
+}
+
+bool Pacman::getChanged() const {
+    return changed;
 }

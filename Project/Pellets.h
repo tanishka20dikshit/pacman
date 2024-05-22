@@ -20,6 +20,12 @@ class Pellets : public Collectables {
         Pellets(int gs, int width, int **mz);
         void draw(sf::RenderWindow& window) override;
         int addPoints(Pacman pacman);
+        int getGridSize() const;
+        int getCellSize() const;
+        int getPoints() const;
+        int** getMaze() const;
+        sf::SoundBuffer getBuffer() const;
+        sf::Sound getSound() const;
 };
 
 #endif

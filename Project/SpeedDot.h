@@ -16,13 +16,20 @@ class SpeedDot : public Collectables {
         float scaleFactor = 1.0f;
         bool isScalingDown = false;
         sf::Clock animationClock;
-
     public:
         SpeedDot();
         SpeedDot(int gs, int width, int **mz);
         void placeRandomly();
         void draw(sf::RenderWindow& window) override;
         int addPoints(Pacman &pacman);
+        int getGridSize() const;
+        int getCellSize() const;
+        int getPoints() const;
+        int getN() const;
+        int** getMaze() const;
+        float getScaleFactor() const;
+        bool getIsScalingDown() const;
+        sf::Clock getAnimationClock() const;
 };
 
 #endif

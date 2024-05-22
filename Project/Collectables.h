@@ -11,6 +11,7 @@ class Collectables : public Elements {
     public:
         Collectables();
         virtual int addPoints(Pacman pacman);
+        int getPoints() const;
 };
 
 #endif

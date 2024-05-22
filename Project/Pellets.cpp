@@ -32,3 +32,27 @@ int Pellets::addPoints(Pacman pacman){
     }
     return 0;
 };
+
+int Pellets::getGridSize() const {
+    return gridSize;
+}
+
+int Pellets::getCellSize() const {
+    return cellSize;
+}
+
+int Pellets::getPoints() const {
+    return points;
+}
+
+int** Pellets::getMaze() const {
+    return maze;
+}
+
+sf::SoundBuffer Pellets::getBuffer() const {
+    return buffer;
+}
+
+sf::Sound Pellets::getSound() const {
+    return sound;
+}

@@ -57,3 +57,35 @@ int SpeedDot::addPoints(Pacman &pacman){
     }
     return 0;
 };
+
+int SpeedDot::getGridSize() const {
+    return gridSize;
+}
+
+int SpeedDot::getCellSize() const {
+    return cellSize;
+}
+
+int SpeedDot::getPoints() const {
+    return points;
+}
+
+int SpeedDot::getN() const {
+    return n;
+}
+
+int** SpeedDot::getMaze() const {
+    return maze;
+}
+
+float SpeedDot::getScaleFactor() const {
+    return scaleFactor;
+}
+
+bool SpeedDot::getIsScalingDown() const {
+    return isScalingDown;
+}
+
+sf::Clock SpeedDot::getAnimationClock() const {
+    return animationClock;
+}
