@@ -1,82 +1,69 @@
-
 #include <iostream>
 #include <cassert>
 #include "Game.h"
 #include <SFML/Graphics.hpp>
 
+// Function to test the initialization of the Game object
 void testInitialization(Game& game, int w, int h) {
-    // Test if the Game object initializes correctly
-    assert(game.getHeight() == h);
-    assert(game.getWidth() == w);
-    assert(game.getPoints() == 0);
-    assert(game.getLives() == 3);
-    assert(!game.getIsAlive());
-    assert(game.getDirection() == 0);
-    assert(game.getIsAlive() == false);
-    assert(game.getCanGameStart() == false);
-    assert(game.getIsDying() == false);
-    assert(game.getFont().loadFromFile("CrackMan.TTF"));
-    std::cout << "Initialization test passed!" << std::endl;
+    // Assert statements to verify the initial state of the game
+    assert(game.getHeight() == h); // Check if the height is set correctly
+    assert(game.getWidth() == w);  // Check if the width is set correctly
+    assert(game.getPoints() == 0); // Check if the points are initialized to 0
+    assert(game.getLives() == 3);  // Check if the lives are initialized to 3
+    assert(!game.getIsAlive());    // Check if the game is not alive initially
+    assert(game.getDirection() == 0); // Check if the initial direction is 0
+    assert(game.getIsAlive() == false); // Check if the game is not alive
+    assert(game.getCanGameStart() == false); // Check if the game cannot start initially
+    assert(game.getIsDying() == false); // Check if the game is not dying initially
+    assert(game.getFont().loadFromFile("CrackMan.TTF")); // Check if the font loads correctly
+    std::cout << "Initialization test passed!" << std::endl; // Print success message
 }
 
+// Function to test the handling of key inputs
 void testHandlingKeys(Game& game) {
-    // Test if the handlingKeys method updates direction correctly
-    
-    // Simulate key press events and check the direction
-    game.handleKeys();
-    // Since we can't simulate actual key presses without a framework,
-    // we just test if the function can be called without errors.
-    std::cout << "Handling keys test passed!" << std::endl;
+    game.handleKeys(); // Call the handleKeys method to simulate key handling
+    std::cout << "Handling keys test passed!" << std::endl; // Print success message
 }
 
-
+// Function to test the render method of the Game object
 void testRender(Game& game) {
-    // Test if the render method works without crashing
-    game.render(); // Call render to check if it executes without errors
-    std::cout << "Render method test passed!" << std::endl;
+    game.render(); // Call the render method to simulate rendering
+    std::cout << "Render method test passed!" << std::endl; // Print success message
 }
 
-//Test game reset
+// Function to test the reset functionality of the Game object
 void testGameReset(Game& game) {
-    
-    // Simulate some gameplay changes
-    game.run();
-    game.resetGame();
-    
-    // Test reset points and lives
-    assert(game.getPoints()==0);
-    assert(game.getLives()==3);
+    game.run(); // Run the game
+    game.resetGame(); // Reset the game
 
-    // Test reset state flags
-    assert(game.getIsAlive() == false);
-    assert(game.getCanGameStart() == false);
-    assert(game.getIsDying() == false);
+    // Assert statements to verify the state after reset
+    assert(game.getPoints() == 0); // Check if points are reset to 0
+    assert(game.getLives() == 3);  // Check if lives are reset to 3
+    assert(game.getIsAlive() == false); // Check if the game is not alive
+    assert(game.getCanGameStart() == false); // Check if the game cannot start
+    assert(game.getIsDying() == false); // Check if the game is not dying
 }
 
-//Test if the High Score is still persisted
+// Function to test high score persistence across game resets
 void testHighScorePersistence(Game& game) {
+    game.resetGame(); // Reset the game
+    game.run(); // Run the game
+    int initialHighScore = game.getHighScore(); // Store the initial high score
+    game.resetGame(); // Reset the game again
     
-    // Simulate some gameplay changes to set a high score
-    game.resetGame();
-    game.run();
-    int initialHighScore = game.getHighScore();
-    game.resetGame();
-    
-    // Ensure high score is updated and persistent
-    assert(initialHighScore==game.getHighScore());
+    // Assert to check if high score remains the same after reset
+    assert(initialHighScore == game.getHighScore());
 }
 
 int main() {
     int w = 800;
     int h = 800;
-    Game game(h,w);
-    // Run test cases
-    testInitialization(game,w,h);
-    testHandlingKeys(game);
-    //testRun(game);
-    testRender(game);
+    Game game(h, w); // Create a Game object with height and width
+
+    testInitialization(game, w, h); // Test initialization
+    testHandlingKeys(game); // Test handling keys
+    testRender(game); // Test rendering
     
-    std::cout << "All tests passed!" << std::endl;
+    std::cout << "All tests passed!" << std::endl; // Print success message
     return 0;
 }
-
