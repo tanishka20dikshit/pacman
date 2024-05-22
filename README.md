@@ -67,7 +67,7 @@ Project Structure
 makefile
 
 Pacman-Game/
-├── images/             # Game assets (sounds)
+├── images/             # Game assets (textures)
 ├── sounds/             # Game assets (sounds)
 ├── testFiles/          # Unit test  files
 ├── Makefile            # Makefile for building the project
