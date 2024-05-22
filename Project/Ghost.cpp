@@ -84,6 +84,17 @@ bool Ghost::checkDeath(Pacman p){
     return false;
 }
 
+// To test (pacman death detection)
+/*bool Ghost::checkDeath(Pacman p){
+    sf::Vector2f pacPos = p.getPosition();
+    sf::Vector2f ghostPos = ghost.getPosition();
+    float distance = std::sqrt(std::pow(pacPos.x - ghostPos.x, 2) + std::pow(pacPos.y - ghostPos.y, 2));
+    if (distance < cellSize) {
+        return true;
+    }
+    return false;
+}*/
+
 int Ghost::getChange() const {
     return change;
 }

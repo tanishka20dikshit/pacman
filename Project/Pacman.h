@@ -26,7 +26,7 @@ class Pacman : public Entities {
         bool move(int direction, Maze maze, float time) override;
         void setPosition(const sf::Vector2f& newPos) override;
         sf::Vector2f getPosition() const override;
-        float getSpeed();
+        float getSpeed() const ;
         void increaseSpeed(bool toggle);
         sf::Texture getPacmanTexture() const;
         sf::Texture getPacmanfTexture() const;

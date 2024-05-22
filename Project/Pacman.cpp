@@ -66,7 +66,7 @@ sf::Vector2f Pacman::getPosition() const {
     return pacman.getPosition();
 }
 
-float Pacman::getSpeed(){
+float Pacman::getSpeed() const {
     return speed;
 }
 
